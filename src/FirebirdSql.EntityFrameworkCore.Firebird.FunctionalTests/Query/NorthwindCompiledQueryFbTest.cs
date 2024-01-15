@@ -16,6 +16,7 @@
 //$Authors = Jiri Cincura (jiri@cincura.net)
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -32,15 +33,6 @@ public class NorthwindCompiledQueryFbTest : NorthwindCompiledQueryTestBase<North
 	public NorthwindCompiledQueryFbTest(NorthwindQueryFbFixture<NoopModelCustomizer> fixture)
 		: base(fixture)
 	{ }
-
-	[Fact]
-	public override void MakeBinary_does_not_throw_for_unsupported_operator()
-	{
-		Assert.Equal(
-			   CoreStrings.TranslationFailed("DbSet<Customer>()    .Where(c => c.CustomerID == (string)(__parameters[0]))"),
-			   Assert.Throws<InvalidOperationException>(
-				   () => base.MakeBinary_does_not_throw_for_unsupported_operator()).Message.Replace("\r", "").Replace("\n", ""));
-	}
 
 	[Fact]
 	public override void Query_with_array_parameter()
@@ -69,6 +61,7 @@ public class NorthwindCompiledQueryFbTest : NorthwindCompiledQueryTestBase<North
 	[Fact]
 	public override async Task Query_with_array_parameter_async()
 	{
+		
 		var query = EF.CompileAsyncQuery(
 						(NorthwindContext context, string[] args)
 							=> context.Customers.Where(c => c.CustomerID == args[0]));
@@ -87,6 +80,13 @@ public class NorthwindCompiledQueryFbTest : NorthwindCompiledQueryTestBase<North
 				CoreStrings.TranslationFailed("DbSet<Customer>()    .Where(c => c.CustomerID == __args[0])"),
 				(await Assert.ThrowsAsync<InvalidOperationException>(
 					() => Enumerate(query(context, new[] { "ANATR" })))).Message.Replace("\r", "").Replace("\n", ""));
+		}
+	}
+
+	protected async Task Enumerate<T>(IAsyncEnumerable<T> source)
+	{
+		await foreach (var _ in source)
+		{
 		}
 	}
 

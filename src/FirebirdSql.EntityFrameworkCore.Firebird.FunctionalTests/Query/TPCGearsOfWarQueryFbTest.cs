@@ -421,7 +421,7 @@ public class TPCGearsOfWarQueryFbTest : TPCGearsOfWarQueryRelationalTestBase<TPC
 	public override Task ToString_boolean_property_nullable(bool async)
 	{
 		return AssertQuery(async, (ISetSource ss) => from lh in ss.Set<LocustHorde>()
-													 select ((object)lh.Eradicated).ToString(), null, elementAsserter: (lhs, rhs) => { Assert.True(lhs.Equals(rhs, System.StringComparison.InvariantCultureIgnoreCase)); }, assertOrder: false, 0, "ToString_boolean_property_nullable");
+													 select ((object)lh.Eradicated).ToString(), null, elementAsserter: (lhs, rhs) => { Assert.True(lhs.Equals(rhs, System.StringComparison.InvariantCultureIgnoreCase)); }, assertOrder: false, false, "ToString_boolean_property_nullable");
 	}
 
 	[Theory]
@@ -429,7 +429,7 @@ public class TPCGearsOfWarQueryFbTest : TPCGearsOfWarQueryRelationalTestBase<TPC
 	public override Task ToString_boolean_property_non_nullable(bool async)
 	{
 		return AssertQuery(async, (ISetSource ss) => from w in ss.Set<Weapon>()
-													 select w.IsAutomatic.ToString(), null, elementAsserter: (lhs, rhs) => { Assert.True(lhs.Equals(rhs, System.StringComparison.InvariantCultureIgnoreCase)); }, assertOrder: false, 0, "ToString_boolean_property_non_nullable");
+													 select w.IsAutomatic.ToString(), null, elementAsserter: (lhs, rhs) => { Assert.True(lhs.Equals(rhs, System.StringComparison.InvariantCultureIgnoreCase)); }, assertOrder: false, false, "ToString_boolean_property_non_nullable");
 	}
 
 	[Theory(Skip = "Different implicit ordering on Firebird.")]
